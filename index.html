@@ -65,13 +65,12 @@ animation:openingFade 2.4s forwards;
 /* Scene */
 
 .scene{
-width:100%;
-max-width:390px;
-height:620px;
-perspective:1200px;
+width:min(92vw,390px);
+perspective:1400px;
 opacity:0;
 animation:showCard .8s forwards;
 animation-delay:1.4s;
+transition:max-width .5s ease;
 }
 
 @keyframes showCard{
@@ -83,14 +82,14 @@ to{opacity:1;}
 .card{
 position:relative;
 width:100%;
-height:100%;
+aspect-ratio:1.586;
 transform-style:preserve-3d;
-transition:transform .9s cubic-bezier(.22,.61,.36,1);
+transition:transform .8s cubic-bezier(.22,.61,.36,1);
 cursor:pointer;
 }
 
 .card.flip{
-transform:rotateY(180deg);
+transform:scale(1.03) rotateY(180deg);
 }
 
 .face{
@@ -116,11 +115,16 @@ position:absolute;
 bottom:12px;
 left:50%;
 transform:translateX(-50%);
-background:rgba(255,255,255,.85);
+background:rgba(255,255,255,.88);
 padding:7px 14px;
 border-radius:999px;
 font-size:11px;
 letter-spacing:1px;
+transition:.3s;
+}
+
+.card:hover .tap{
+transform:translateX(-50%) translateY(-2px);
 }
 
 /* BACK */
@@ -129,7 +133,7 @@ letter-spacing:1px;
 transform:rotateY(180deg);
 
 background:
-linear-gradient(rgba(247,241,233,.92), rgba(247,241,233,.92)),
+linear-gradient(rgba(247,241,233,.95),rgba(247,241,233,.95)),
 url("bg2.jpeg") center/cover;
 
 backdrop-filter:blur(14px);
@@ -138,11 +142,25 @@ padding:22px;
 
 display:flex;
 flex-direction:column;
-justify-content:space-between;
 
 color:var(--text);
 
+height:min(78vh,620px);
+
 overflow-y:auto;
+
+border-radius:22px;
+}
+
+/* Scroll */
+
+.back::-webkit-scrollbar{
+width:6px;
+}
+
+.back::-webkit-scrollbar-thumb{
+background:#c8b8a0;
+border-radius:999px;
 }
 
 .label{
@@ -162,20 +180,21 @@ margin-top:8px;
 .sub{
 font-size:13px;
 color:#666;
-margin-bottom:16px;
+margin-bottom:18px;
 }
 
 .msg{
 font-size:14px;
-line-height:1.75;
+line-height:1.8;
 white-space:pre-line;
+margin-bottom:18px;
 }
 
 .gallery{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
-margin-top:18px;
+margin-bottom:20px;
 }
 
 .gallery img{
@@ -184,10 +203,16 @@ aspect-ratio:1;
 object-fit:cover;
 border-radius:12px;
 box-shadow:0 6px 15px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.gallery img:hover{
+transform:scale(1.03);
 }
 
 .song{
-margin-top:20px;
+margin-top:auto;
+padding-top:8px;
 }
 
 .song small{
@@ -203,16 +228,39 @@ margin-bottom:10px;
 
 iframe{
 width:100%;
-height:80px;
+height:84px;
 border:none;
 border-radius:12px;
 }
 
 .footer{
-margin-top:14px;
+margin-top:16px;
 text-align:right;
 font-style:italic;
 color:#777;
+}
+
+/* Mobile */
+
+@media(max-width:480px){
+
+.scene{
+width:92vw;
+}
+
+.back{
+height:72vh;
+padding:18px;
+}
+
+h1{
+font-size:28px;
+}
+
+#opening{
+font-size:26px;
+}
+
 }
 
 </style>
@@ -221,7 +269,7 @@ color:#777;
 
 <div id="opening">Some memories deserve to be kept.</div>
 
-<div class="scene">
+<div class="scene" id="scene">
 
 <div class="card" id="card">
 
@@ -348,7 +396,7 @@ nateta:{
 name:"Nateta",
 opening:"Some memories deserve another page.",
 card:"cards/nateta.jpg",
-songTitle:"About You - 1975",
+songTitle:"About You — The 1975",
 song:"https://www.youtube.com/embed/iqGAW57EudQ",
 message:`Dear Nateta,
 
@@ -390,6 +438,7 @@ const id=new URLSearchParams(window.location.search).get("to")||"rifqa";
 const person=people[id]||people.rifqa;
 
 document.title=`For ${person.name}`;
+
 document.getElementById("opening").textContent=person.opening;
 document.getElementById("frontImage").src=person.card;
 document.getElementById("title").textContent=`To: ${person.name}`;
@@ -407,8 +456,19 @@ gallery.appendChild(img);
 });
 }
 
-document.getElementById("card").addEventListener("click",()=>{
-document.getElementById("card").classList.toggle("flip");
+const card=document.getElementById("card");
+const scene=document.getElementById("scene");
+
+card.addEventListener("click",()=>{
+
+card.classList.toggle("flip");
+
+if(card.classList.contains("flip")){
+scene.style.maxWidth="440px";
+}else{
+scene.style.maxWidth="390px";
+}
+
 });
 
 </script>
