@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Farewell Card</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+--accent:#d69b63;
+--text:#2d2d2d;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:url("bg2.jpeg") center/cover fixed;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+overflow:hidden;
+animation:bgMove 18s ease-in-out infinite;
+}
+
+@keyframes bgMove{
+0%,100%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+}
+
+/* Opening */
+
+#opening{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+backdrop-filter:blur(8px);
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:"Playfair Display",serif;
+font-size:30px;
+text-align:center;
+padding:30px;
+color:white;
+z-index:999;
+animation:openingFade 2.4s forwards;
+}
+
+@keyframes openingFade{
+0%,70%{opacity:1;}
+100%{opacity:0;visibility:hidden;}
+}
+
+/* Scene */
+
+.scene{
+width:100%;
+max-width:390px;
+height:620px;
+perspective:1200px;
+opacity:0;
+animation:showCard .8s forwards;
+animation-delay:1.4s;
+}
+
+@keyframes showCard{
+to{opacity:1;}
+}
+
+/* Card */
+
+.card{
+position:relative;
+width:100%;
+height:100%;
+transform-style:preserve-3d;
+transition:transform .9s cubic-bezier(.22,.61,.36,1);
+cursor:pointer;
+}
+
+.card.flip{
+transform:rotateY(180deg);
+}
+
+.face{
+position:absolute;
+inset:0;
+border-radius:22px;
+overflow:hidden;
+backface-visibility:hidden;
+box-shadow:0 18px 40px rgba(0,0,0,.25);
+}
+
+/* FRONT */
+
+.front img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.tap{
+position:absolute;
+bottom:12px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(255,255,255,.85);
+padding:7px 14px;
+border-radius:999px;
+font-size:11px;
+letter-spacing:1px;
+}
+
+/* BACK */
+
+.back{
+transform:rotateY(180deg);
+
+background:
+linear-gradient(rgba(247,241,233,.92), rgba(247,241,233,.92)),
+url("bg2.jpeg") center/cover;
+
+backdrop-filter:blur(14px);
+
+padding:22px;
+
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+
+color:var(--text);
+
+overflow-y:auto;
+}
+
+.label{
+font-size:11px;
+letter-spacing:3px;
+text-transform:uppercase;
+color:#777;
+}
+
+h1{
+font-family:"Playfair Display",serif;
+font-size:30px;
+color:var(--accent);
+margin-top:8px;
+}
+
+.sub{
+font-size:13px;
+color:#666;
+margin-bottom:16px;
+}
+
+.msg{
+font-size:14px;
+line-height:1.75;
+white-space:pre-line;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:18px;
+}
+
+.gallery img{
+width:100%;
+aspect-ratio:1;
+object-fit:cover;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,.15);
+}
+
+.song{
+margin-top:20px;
+}
+
+.song small{
+display:block;
+margin-bottom:8px;
+color:#666;
+}
+
+#songTitle{
+font-weight:500;
+margin-bottom:10px;
+}
+
+iframe{
+width:100%;
+height:80px;
+border:none;
+border-radius:12px;
+}
+
+.footer{
+margin-top:14px;
+text-align:right;
+font-style:italic;
+color:#777;
+}
+
+</style>
+</head>
+<body>
+
+<div id="opening">Some memories deserve to be kept.</div>
+
+<div class="scene">
+
+<div class="card" id="card">
+
+<div class="face front">
+
+<img id="frontImage" src="cards/rifqa.jpg" alt="Farewell Card">
+
+<div class="tap">Tap to open</div>
+
+</div>
+
+<div class="face back">
+
+<div>
+
+<div class="label">READ PRIVATELY</div>
+
+<h1 id="title">To: Rifqa</h1>
+
+<div class="sub">A little piece of our memories.</div>
+
+<div class="msg" id="message"></div>
+
+<div class="gallery" id="gallery"></div>
+
+</div>
+
+<div class="song">
+
+<small>🎵 The Song I Remember About You</small>
+
+<div id="songTitle"></div>
+
+<iframe
+id="song"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen></iframe>
+
+<div class="footer">— Daffa</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const people={
+
+rifqa:{
+name:"Rifqa",
+opening:"Some memories bloom forever.",
+card:"cards/rifqa.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_RIFQA",
+message:`Dear Rifqa,
+
+Thank you for becoming one of the people who made this internship feel warmer.
+
+Some ordinary moments somehow became unforgettable.
+
+Take care, and thank you for being part of this chapter.`
+},
+
+risca:{
+name:"Risca",
+opening:"Blue skies keep old memories.",
+card:"cards/risca.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_RISCA",
+message:`Dear Risca,
+
+Thank you for every laugh and every little moment.`
+},
+
+suci:{
+name:"Suci",
+opening:"Good hearts leave quiet memories.",
+card:"cards/suci.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_SUCI",
+message:`Dear Suci,
+
+Thank you for making this chapter brighter.`
+},
+
+iqbal:{
+name:"Iqbal",
+opening:"Every journey keeps its people.",
+card:"cards/iqbal.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_IQBAL",
+message:`Dear Iqbal,
+
+Thank you for being part of this story.`
+},
+
+ikhrom:{
+name:"Ikhrom",
+opening:"Some conversations echo longer.",
+card:"cards/ikhrom.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_IKHROM",
+message:`Dear Ikhrom,
+
+See you somewhere beyond this chapter.`
+},
+
+britney:{
+name:"Britney",
+opening:"Kindness always stays.",
+card:"cards/britney.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_BRITNEY",
+message:`Dear Britney,
+
+Thank you for becoming part of these memories.`
+},
+
+nateta:{
+name:"Nateta",
+opening:"Some memories deserve another page.",
+card:"cards/nateta.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_NATETA",
+message:`Dear Nateta,
+
+Some memories deserve another page, and ours definitely do.
+
+Thank you for being part of this chapter.`,
+
+gallery:[
+"nateta/1.png"
+]
+},
+
+erin:{
+name:"Erin",
+opening:"Some stars stay with us.",
+card:"cards/erin.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_ERIN",
+message:`Dear Erin,
+
+Thank you for being part of this journey.`
+},
+
+sinta:{
+name:"Sinta",
+opening:"Some sunsets never really end.",
+card:"cards/sinta.jpg",
+songTitle:"Your Song Title",
+song:"https://www.youtube.com/embed/VIDEO_ID_SINTA",
+message:`Dear Sinta,
+
+Thank you for sharing this unforgettable chapter.`
+}
+
+};
+
+const id=new URLSearchParams(window.location.search).get("to")||"rifqa";
+
+const person=people[id]||people.rifqa;
+
+document.title=`For ${person.name}`;
+document.getElementById("opening").textContent=person.opening;
+document.getElementById("frontImage").src=person.card;
+document.getElementById("title").textContent=`To: ${person.name}`;
+document.getElementById("message").textContent=person.message;
+document.getElementById("songTitle").textContent=person.songTitle;
+document.getElementById("song").src=person.song;
+
+const gallery=document.getElementById("gallery");
+
+if(person.gallery){
+person.gallery.forEach(src=>{
+const img=document.createElement("img");
+img.src=src;
+gallery.appendChild(img);
+});
+}
+
+document.getElementById("card").addEventListener("click",()=>{
+document.getElementById("card").classList.toggle("flip");
+});
+
+</script>
+
+</body>
+</html>
